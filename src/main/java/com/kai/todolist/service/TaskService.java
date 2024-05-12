@@ -3,6 +3,9 @@ package com.kai.todolist.service;
 import com.kai.todolist.entity.Tasks;
 import com.kai.todolist.repository.TasksRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -17,6 +20,11 @@ public class TaskService {
     public List<Tasks> GetAllTask(){
         List<Tasks> tasks = tasksRepository.findAll();
         return tasks;
+    }
+
+    public Page<Tasks> GetAllTaskWithPagination(int pageNumber,int pageSize){
+        Pageable pageable = PageRequest.of(pageNumber,pageSize);
+        return tasksRepository.findAll(pageable);
     }
 
     public Optional<Tasks> GetTaskByID(Long id){
@@ -36,4 +44,5 @@ public class TaskService {
         taskToUpdate.get().setDone(tasks.isDone());
         tasksRepository.save(taskToUpdate.get());
     }
+
 }

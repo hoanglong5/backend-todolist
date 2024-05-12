@@ -4,6 +4,7 @@ import com.kai.todolist.entity.Tasks;
 import com.kai.todolist.service.TaskService;
 import jakarta.websocket.server.PathParam;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +22,11 @@ public class TaskController {
     public ResponseEntity<List<Tasks>> GetAllTask(){
         List<Tasks> ListTasks = taskService.GetAllTask();
         return new ResponseEntity<>(ListTasks, HttpStatus.OK);
+    }
+    @GetMapping("/pagination")
+    public ResponseEntity<Page<Tasks>> GetAllTaskWithPagination(@RequestParam(defaultValue = "0") int page,@RequestParam(defaultValue = "10") int size){
+        Page<Tasks> tasksPagination = taskService.GetAllTaskWithPagination(page, size);
+        return ResponseEntity.ok(tasksPagination);
     }
     @GetMapping("/{id}")
     public ResponseEntity<Optional<Tasks>> GetTaskByID(@PathVariable Long id){
