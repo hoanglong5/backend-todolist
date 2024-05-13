@@ -1,8 +1,8 @@
 package com.kai.todolist.controller;
 
-import com.kai.todolist.entity.Tasks;
+import com.kai.todolist.dto.TaskDto;
+import com.kai.todolist.entity.Task;
 import com.kai.todolist.service.TaskService;
-import jakarta.websocket.server.PathParam;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -19,31 +19,33 @@ public class TaskController {
     private final TaskService taskService;
 
     @GetMapping
-    public ResponseEntity<List<Tasks>> GetAllTask(){
-        List<Tasks> ListTasks = taskService.GetAllTask();
-        return new ResponseEntity<>(ListTasks, HttpStatus.OK);
+    public ResponseEntity<List<TaskDto>> GetAllTask(){
+        List<TaskDto> taskDtos = taskService.GetAllTask();
+        return new ResponseEntity<>(taskDtos, HttpStatus.OK);
     }
     @GetMapping("/pagination")
-    public ResponseEntity<Page<Tasks>> GetAllTaskWithPagination(@RequestParam(defaultValue = "0") int page,@RequestParam(defaultValue = "10") int size){
-        Page<Tasks> tasksPagination = taskService.GetAllTaskWithPagination(page, size);
-        return ResponseEntity.ok(tasksPagination);
+    public ResponseEntity<Page<TaskDto>> GetAllTaskWithPagination(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size){
+        Page<TaskDto> tasksDtoPagination = taskService.GetAllTaskWithPagination(page, size);
+        return ResponseEntity.ok(tasksDtoPagination);
     }
     @GetMapping("/{id}")
-    public ResponseEntity<Optional<Tasks>> GetTaskByID(@PathVariable Long id){
-        Optional<Tasks> tasks = taskService.GetTaskByID(id);
-        return ResponseEntity.ok(tasks);
+    public ResponseEntity<TaskDto> GetTaskByID(@PathVariable Long id){
+        TaskDto taskDto = taskService.GetTaskByID(id);
+        return ResponseEntity.ok(taskDto);
     }
     @PostMapping()
-    public ResponseEntity<Tasks> CreateTask(@RequestBody Tasks tasks){
-        taskService.CreateTask(tasks);
-        return ResponseEntity.ok(tasks);
+    public ResponseEntity<Task> CreateTask(@RequestBody Task task){
+        taskService.CreateTask(task);
+        return ResponseEntity.ok(task);
     }
     @DeleteMapping("/{id}")
-    public void DeleteTask(@PathVariable Long id){
+    public ResponseEntity<TaskDto> DeleteTask(@PathVariable Long id){
+        TaskDto task = taskService.GetTaskByID(id);
         taskService.DeleteTask(id);
+        return ResponseEntity.ok(task);
     }
     @PutMapping("/{id}")
-    public void UpdateTask(@RequestBody Tasks tasks,@PathVariable Long id){
-        taskService.UpdateTask(id, tasks);
+    public void UpdateTask(@RequestBody Task task, @PathVariable Long id){
+        taskService.UpdateTask(id, task);
     }
 }
