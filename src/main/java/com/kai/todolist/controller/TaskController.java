@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/v1/tasks")
+@RequestMapping("/api/${application.version}/tasks")
 @AllArgsConstructor
 public class TaskController {
     private final TaskService taskService;
@@ -23,6 +23,7 @@ public class TaskController {
         List<TaskDto> taskDtos = taskService.GetAllTask();
         return new ResponseEntity<>(taskDtos, HttpStatus.OK);
     }
+
     @GetMapping("/pagination")
     public ResponseEntity<Page<TaskDto>> GetAllTaskWithPagination(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size){
         Page<TaskDto> tasksDtoPagination = taskService.GetAllTaskWithPagination(page, size);
@@ -34,18 +35,18 @@ public class TaskController {
         return ResponseEntity.ok(taskDto);
     }
     @PostMapping()
-    public ResponseEntity<Task> CreateTask(@RequestBody Task task){
-        taskService.CreateTask(task);
-        return ResponseEntity.ok(task);
+    public ResponseEntity<String> CreateTask(@RequestBody Task task){
+        String result = taskService.CreateTask(task);
+        return ResponseEntity.ok(result);
     }
     @DeleteMapping("/{id}")
-    public ResponseEntity<TaskDto> DeleteTask(@PathVariable Long id){
-        TaskDto task = taskService.GetTaskByID(id);
-        taskService.DeleteTask(id);
-        return ResponseEntity.ok(task);
+    public ResponseEntity<String> DeleteTask(@PathVariable Long id){
+        String result = taskService.DeleteTask(id);
+        return ResponseEntity.ok(result);
     }
     @PutMapping("/{id}")
-    public void UpdateTask(@RequestBody Task task, @PathVariable Long id){
-        taskService.UpdateTask(id, task);
+    public ResponseEntity<String> UpdateTask(@RequestBody Task task, @PathVariable Long id){
+        String result = taskService.UpdateTask(id, task);
+        return ResponseEntity.ok(result);
     }
 }
