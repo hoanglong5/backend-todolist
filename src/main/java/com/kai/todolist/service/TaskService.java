@@ -4,10 +4,7 @@ import com.kai.todolist.entity.Task;
 import com.kai.todolist.enums.SuccessMessage;
 import com.kai.todolist.mapper.TasksMapper;
 import lombok.AllArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -26,7 +23,8 @@ public class TaskService {
     }
 
     public Page<TaskDto> GetAllTaskWithPagination(int pageNumber, int pageSize){
-        Pageable pageable = PageRequest.of(pageNumber,pageSize);
+        int validPageSize = (pageSize <= 0) ? 10 : pageSize;
+        Pageable pageable = PageRequest.of(pageNumber,validPageSize, Sort.by("id"));
         Page<Task> tasks = taskEntityService.GetAllTask(pageable);
         List<TaskDto> taskDtos = TasksMapper.INSTANCE.ListTaskToListDto(tasks.getContent());
         return new PageImpl<>(taskDtos,pageable,tasks.getTotalElements());
@@ -49,12 +47,15 @@ public class TaskService {
     }
     public String UpdateTask(Long id, Task task){
         Task taskToUpdate = taskValidationService.GetIdWithControl(id);
-        taskValidationService.ControlAllFieldsNotNull(task);
-        taskToUpdate.setDateCreated(task.getDateCreated());
+        taskToUpdate.setDateCreated(taskToUpdate.getDateCreated());
         taskToUpdate.setToDo(task.getToDo());
         taskToUpdate.setDone(task.isDone());
         taskEntityService.CreateTask(taskToUpdate);
         return SuccessMessage.UPDATE_TASK_SUCCESSFUL.getDetail();
     }
 
+    public String DeleteAll(){
+        taskEntityService.DeletaAllTask();
+        return SuccessMessage.DELETE_TASKS_SUCCESSFUL.getDetail();
+    }
 }

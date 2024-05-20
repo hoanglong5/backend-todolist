@@ -7,6 +7,7 @@ import com.kai.todolist.repository.TaskRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,7 +18,7 @@ import java.util.Optional;
 public class TaskEntityService {
     private final TaskRepository taskRepository;
     public List<Task> GetAllTask(){
-        return taskRepository.findAll();
+        return taskRepository.findAll(Sort.by("id").ascending());
     }
 
     public Optional<Task> GetTaskById(Long id){
@@ -36,5 +37,9 @@ public class TaskEntityService {
 
     public boolean CheckTaskIsExist(Long id){
         return taskRepository.existsById(id);
+    }
+
+    public void DeletaAllTask(){
+        taskRepository.deleteAll();
     }
 }

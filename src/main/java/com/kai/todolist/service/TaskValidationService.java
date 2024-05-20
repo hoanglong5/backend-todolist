@@ -23,8 +23,6 @@ public class TaskValidationService {
         return task;
     }
     public void ControlAllFieldsNotNull(Task task){
-        if (task == null){
-            throw new IllegalFieldException(ErrorMessage.PARAMETER_CANNOT_BE_NULL.getDetail());}
         boolean hasNullField = task.getToDo().isBlank() ||
                                 task.getDateCreated().toString().isBlank() ;
         if (hasNullField){

@@ -3,11 +3,14 @@ package com.kai.todolist.controller;
 import com.kai.todolist.dto.TaskDto;
 import com.kai.todolist.entity.Task;
 import com.kai.todolist.service.TaskService;
-import lombok.AllArgsConstructor;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import lombok.AllArgsConstructor;
+
 
 import java.util.List;
 import java.util.Optional;
@@ -35,7 +38,7 @@ public class TaskController {
         return ResponseEntity.ok(taskDto);
     }
     @PostMapping()
-    public ResponseEntity<String> CreateTask(@RequestBody Task task){
+    public ResponseEntity<String> CreateTask(@RequestBody @Valid @DateTimeFormat(pattern = "yy-MM-dd") Task task){
         String result = taskService.CreateTask(task);
         return ResponseEntity.ok(result);
     }
@@ -45,8 +48,14 @@ public class TaskController {
         return ResponseEntity.ok(result);
     }
     @PutMapping("/{id}")
-    public ResponseEntity<String> UpdateTask(@RequestBody Task task, @PathVariable Long id){
+    public ResponseEntity<String> UpdateTask(@RequestBody @Valid Task task, @PathVariable Long id){
         String result = taskService.UpdateTask(id, task);
+        return ResponseEntity.ok(result);
+    }
+
+    @DeleteMapping("/all")
+    public ResponseEntity<String> DeleteAllTasks(){
+        String result = taskService.DeleteAll();
         return ResponseEntity.ok(result);
     }
 }

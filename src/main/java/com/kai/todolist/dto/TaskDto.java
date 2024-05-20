@@ -9,6 +9,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TaskDto {
+    private Long id;
     private String toDo;
     private boolean done;
     private LocalDate dateCreated;

@@ -11,6 +11,6 @@ import java.util.List;
 public interface TasksMapper {
     TasksMapper INSTANCE = Mappers.getMapper(TasksMapper.class);
     TaskDto TasksToTaskDto(Task task);
-    @IterableMapping(elementTargetType = TaskDto.class)
+//    @IterableMapping(elementTargetType = TaskDto.class)
     List<TaskDto> ListTaskToListDto(List<Task> taskList);
 }
